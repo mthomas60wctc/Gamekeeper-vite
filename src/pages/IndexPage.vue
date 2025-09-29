@@ -5,5 +5,5 @@
 </template>
 
 <script setup>
-console.log('Index Page Loaded')
+console.log("Index Page Loaded");
 </script>

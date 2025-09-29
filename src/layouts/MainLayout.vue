@@ -11,7 +11,13 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" side="left" overlay bordered class="dark">
+    <q-drawer
+      v-model="leftDrawerOpen"
+      side="left"
+      overlay
+      bordered
+      class="dark"
+    >
       <q-list>
         <q-item-label header overline>MENU</q-item-label>
         <q-item
@@ -52,33 +58,53 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useQuasar } from 'quasar'
-import { useRoute } from 'vue-router'
-import { useMeta } from 'quasar'
-import '../css/mainLayout.scss'
+import { ref } from "vue";
+import { useQuasar } from "quasar";
+import { useRoute } from "vue-router";
+import { useMeta } from "quasar";
+import "../css/mainLayout.scss";
 
-const $q = useQuasar()
+const $q = useQuasar();
 
-const leftDrawerOpen = ref(false)
+const leftDrawerOpen = ref(false);
 
 function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value
+  leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 const menuItems = [
-  { to: '/newInstance', label: 'START', description: 'Begin a new game session', icon: 'sym_s_play_arrow' },
-  { to: '/newGame', label: 'ADD', description: 'Add a new game to your library', icon: 'sym_s_add_circle' },
-  { to: '/ongoingGame', label: 'RESUME', description: 'Continue an ongoing game', icon: 'sym_s_resume' },
-  { to: '/recordsView', label: 'RECORDS', description: 'View your game and player records', icon: 'sym_s_leaderboard' },
-]
+  {
+    to: "/newInstance",
+    label: "START",
+    description: "Begin a new game session",
+    icon: "sym_s_play_arrow",
+  },
+  {
+    to: "/newGame",
+    label: "ADD",
+    description: "Add a new game to your library",
+    icon: "sym_s_add_circle",
+  },
+  {
+    to: "/ongoingGame",
+    label: "RESUME",
+    description: "Continue an ongoing game",
+    icon: "sym_s_resume",
+  },
+  {
+    to: "/recordsView",
+    label: "RECORDS",
+    description: "View your game and player records",
+    icon: "sym_s_leaderboard",
+  },
+];
 
 function toggleDarkMode() {
-  $q.dark.toggle()
+  $q.dark.toggle();
 }
 
-const route = useRoute()
+const route = useRoute();
 
 useMeta(() => ({
-  title: route.meta.title || 'GameKeeper',
-}))
+  title: route.meta.title || "GameKeeper",
+}));
 </script>

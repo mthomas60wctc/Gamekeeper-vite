@@ -4,7 +4,13 @@
   </div>
   <q-separator />
   <div class="row justify-between">
-    <q-btn label="Cancel" icon="sym_s_cancel" color="amber-14" flat @click="$router.push('/')" />
+    <q-btn
+      label="Cancel"
+      icon="sym_s_cancel"
+      color="amber-14"
+      flat
+      @click="$router.push('/')"
+    />
     <q-btn
       label="Add Game To Library"
       icon="sym_s_arrow_forward"
@@ -16,5 +22,5 @@
 </template>
 
 <script setup>
-console.log('New Game Page Loaded')
+console.log("New Game Page Loaded");
 </script>
