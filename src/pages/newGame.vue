@@ -7,14 +7,14 @@
     <q-btn
       label="Cancel"
       icon="sym_s_cancel"
-      color="amber-14"
+      color="negative"
       flat
       @click="$router.push('/')"
     />
     <q-btn
       label="Add Game To Library"
       icon="sym_s_arrow_forward"
-      color="red"
+      color="positive"
       flat
       @click="$router.push('/newInstance')"
     />

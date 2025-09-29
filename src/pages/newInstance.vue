@@ -2,7 +2,7 @@
   <div class="q-pa-lg q-gutter-lg">
     <div class="row q-gutter-md items-end">
       <q-select
-        filled
+        standout
         v-model="gameSelected"
         use-input
         input-debounce="0"
@@ -12,7 +12,6 @@
         style="width: 300px"
         behavior="menu"
         clearable
-        color="red"
         class="col-grow"
       >
         <template v-slot:no-option>
@@ -27,8 +26,8 @@
       <q-btn
         icon="sym_s_add"
         label="New Game"
-        color="red"
         class="q-mb-sm"
+        color="secondary"
         @click="$router.push('/newGame')"
       />
     </div>
@@ -73,15 +72,14 @@
     <q-btn
       label="Reset Form"
       icon="sym_s_refresh"
-      color="amber-14"
+      color="negative"
       flat
       @click="resetForm"
     />
     <q-btn
       label="Start Game"
       icon="sym_s_play_arrow"
-      color="red"
-      unelevated
+      color="positive"
       flat
       @click="startGame"
       :disable="!gameSelected || selectedPlayers.length === 0"

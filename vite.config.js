@@ -11,7 +11,7 @@ export default defineConfig({
     }),
     quasar({
       sassVariables: fileURLToPath(
-        new URL("./src/css/quasar-variables.scss", import.meta.url)
+        new URL("./src/css/quasar-variables.sass", import.meta.url)
       ),
       config: {
         dark: "auto", // or true/false

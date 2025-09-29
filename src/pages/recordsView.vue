@@ -2,13 +2,13 @@
   <div class="q-pa-md">
     <div class="text-h6">Individual Records</div>
     <q-select
+      standout
       v-model="selectedGame"
       :options="gameOptions"
       label="Select game(s)"
       class="q-mb-md"
       multiple
       clearable
-      color="red"
       @clear="selectedGame = []"
     />
   </div>

@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-header elevated class="bg-red text-white">
+    <q-header elevated class="text-white">
       <q-toolbar>
         <q-btn dense flat round icon="sym_s_menu" @click="toggleLeftDrawer" />
         <q-toolbar-title>
@@ -26,7 +26,7 @@
           :to="item.to"
           clickable
           v-ripple
-          active-class="bg-red text-white"
+          active-class="bg-secondary text-white"
         >
           <q-item-section avatar>
             <q-icon :name="item.icon" />

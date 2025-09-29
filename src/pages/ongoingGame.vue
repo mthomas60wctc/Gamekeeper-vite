@@ -1,5 +1,5 @@
 <template>
-  <q-tabs v-model="tab" class="text-red">
+  <q-tabs v-model="tab" dense>
     <q-tab name="current" label="Current Round" />
     <q-tab name="history" label="History" />
   </q-tabs>
@@ -68,8 +68,8 @@
 
   <q-separator />
   <div class="row justify-between">
-    <q-btn label="Exit Game" icon="sym_s_exit_to_app" color="amber-14" flat />
-    <q-btn label="Next Round" icon="sym_s_arrow_forward" color="red" flat />
+    <q-btn label="Exit Game" icon="sym_s_exit_to_app" color="negative" flat />
+    <q-btn label="Next Round" icon="sym_s_arrow_forward" color="positive" flat />
   </div>
 </template>
 
