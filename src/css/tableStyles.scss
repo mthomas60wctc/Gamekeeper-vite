@@ -1,0 +1,21 @@
+.q-tab-panel {
+  padding: 0;
+}
+.q-table__container {
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.my-sticky-table {
+  td:first-child,
+  td:last-child,
+  th:first-child,
+  th:last-child {
+    background: $red;
+    position: sticky;
+    left: 0;
+    right: 0;
+    z-index: 3;
+  }
+}

@@ -1,0 +1,11 @@
+// SASS Variables
+$center-max-width: 600px;
+$center-margin: 0 auto;
+
+// Main styling
+.center-col {
+  text-align: center;
+  max-width: $center-max-width;
+  margin-left: auto;
+  margin-right: auto;
+}
