@@ -63,6 +63,16 @@
         >
           {{ player }}
         </q-chip>
+        <q-chip
+          clickable
+          square
+          @click="newPlayerDialog = true"
+          color="grey-4"
+          text-color="dark"
+          icon="sym_s_person_add"
+        >
+          New Player
+        </q-chip>
       </div>
     </div>
 
@@ -85,6 +95,42 @@
       :disable="!gameSelected || selectedPlayers.length === 0"
     />
   </div>
+  <q-dialog v-model="newPlayerDialog" backdrop-filter="blur(4px)">
+    <q-card style="min-width: 350px">
+      <q-card-section>
+        <div class="text-h6">New Player</div>
+      </q-card-section>
+
+      <q-card-section class="q-pt-none">
+        <q-input
+          standout
+          color="red"
+          label="Player Name"
+          v-model="newPlayerName"
+          autofocus
+          @keyup.enter="createPlayer()"
+        />
+      </q-card-section>
+
+      <q-card-actions class="justify-between text-primary">
+        <q-btn
+          flat
+          color="negative"
+          icon="sym_s_cancel"
+          label="Cancel"
+          v-close-popup
+        />
+        <q-btn
+          flat
+          color="positive"
+          icon="sym_s_add"
+          label="Add"
+          v-close-popup
+          @click="createPlayer()"
+        />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup>
@@ -97,6 +143,8 @@ const gameSelected = ref(null);
 const chipColors = ref([]);
 const selectedPlayers = ref([]);
 const newGameName = ref("");
+const newPlayerDialog = ref(false);
+const newPlayerName = ref("");
 
 const availablePlayers = computed(() => {
   return playersFull.filter(
@@ -153,6 +201,18 @@ function filterFn(val, update) {
     const needle = val.toLowerCase();
     games.value = gamesFull.filter((v) => v.toLowerCase().indexOf(needle) > -1);
   });
+}
+
+//todo: add error text if player name is empty or already exists
+//todo: available / selected player list sorting?
+function createPlayer() {
+  const name = newPlayerName.value.trim()
+  if (name && !playersFull.includes(name)) {
+    playersFull.push(name)
+    addPlayer(name)
+    newPlayerName.value = ''
+    newPlayerDialog.value = false
+  }
 }
 
 function addPlayer(player) {

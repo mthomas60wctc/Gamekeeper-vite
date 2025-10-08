@@ -42,7 +42,7 @@
           flat
           dense
           round
-          :icon="$q.dark.isActive ? 'light_mode' : 'dark_mode'"
+          :icon="$q.dark.isActive ? 'sym_s_light_mode' : 'sym_s_dark_mode'"
           aria-label="Toggle Dark Mode"
           @click="toggleDarkMode"
         />

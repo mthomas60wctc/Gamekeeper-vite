@@ -1,6 +1,19 @@
 <template>
   <div class="q-pa-md">
     <div class="text-h6">Create a New Game</div>
+    <q-input
+      standout
+      class="q-mt-md"
+      label="Game Title"
+      v-model="gameTitle"
+    />
+    <q-input
+      standout
+      class="q-mt-md"
+      style="width: 40%"
+      label="Minimum Players"
+      v-model="minPlayers"
+    />
   </div>
   <q-separator />
   <div class="row justify-between">
@@ -21,6 +34,4 @@
   </div>
 </template>
 
-<script setup>
-console.log("New Game Page Loaded");
-</script>
+<script setup></script>
