@@ -75,26 +75,16 @@
         </q-chip>
       </div>
     </div>
-
-    <q-separator />
   </div>
-  <div class="row justify-between">
-    <q-btn
-      label="Reset Form"
-      icon="sym_s_refresh"
-      color="negative"
-      flat
-      @click="resetForm"
-    />
-    <q-btn
-      label="Start Game"
-      icon="sym_s_play_arrow"
-      color="positive"
-      flat
-      @click="startGame"
-      :disable="!gameSelected || selectedPlayers.length === 0"
-    />
-  </div>
+  <BottomBar
+    @cancel="resetForm"
+    @confirm="startGame"
+    cancel-label="Reset Form"
+    :cancel-icon="'sym_s_refresh'"
+    confirm-label="Start Game"
+    :confirm-icon="'sym_s_play_arrow'"
+    :confirm-disabled="!gameSelected || selectedPlayers.length === 0"
+  />
   <q-dialog v-model="newPlayerDialog" backdrop-filter="blur(4px)">
     <q-card style="min-width: 350px">
       <q-card-section>
@@ -111,24 +101,12 @@
           @keyup.enter="createPlayer()"
         />
       </q-card-section>
-
-      <q-card-actions class="justify-between text-primary">
-        <q-btn
-          flat
-          color="negative"
-          icon="sym_s_cancel"
-          label="Cancel"
-          v-close-popup
-        />
-        <q-btn
-          flat
-          color="positive"
-          icon="sym_s_add"
-          label="Add"
-          v-close-popup
-          @click="createPlayer()"
-        />
-      </q-card-actions>
+      <BottomBar
+        @cancel="newPlayerDialog = false"
+        @confirm="createPlayer()"
+        confirm-label="Add"
+        :confirm-icon="'sym_s_add'"
+      />
     </q-card>
   </q-dialog>
 </template>
@@ -137,8 +115,9 @@
 //todo: add new player button + functionality
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
-const router = useRouter();
+import BottomBar from '../components/BottomBar.vue'
 
+const router = useRouter();
 const gameSelected = ref(null);
 const chipColors = ref([]);
 const selectedPlayers = ref([]);

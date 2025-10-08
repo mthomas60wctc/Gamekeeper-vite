@@ -18,34 +18,9 @@
         <template v-slot:body-cell-CurrentRound="props">
           <q-td :props="props">
             <div class="row items-center justify-center no-wrap">
-              <q-btn
-                icon="sym_s_remove"
-                dense
-                flat
-                round
-                @click="
-                  props.row.currentRound = Math.max(
-                    0,
-                    props.row.currentRound - 1
-                  )
-                "
-                size="sm"
-                aria-label="Decrease"
-              />
-              <span
-                class="q-mx-sm"
-                style="min-width: 40px; text-align: center"
-                >{{ props.row.currentRound }}</span
-              >
-              <q-btn
-                icon="sym_s_add"
-                dense
-                flat
-                round
-                @click="props.row.currentRound += 1"
-                size="sm"
-                aria-label="Increase"
-              />
+              <NumberStepper
+              :min="0"
+               />
             </div>
           </q-td>
         </template>
@@ -66,16 +41,20 @@
     </q-tab-panel>
   </q-tab-panels>
 
-  <q-separator />
-  <div class="row justify-between">
-    <q-btn label="Exit Game" icon="sym_s_exit_to_app" color="negative" flat />
-    <q-btn label="Next Round" icon="sym_s_arrow_forward" color="positive" flat />
-  </div>
+  <BottomBar
+    @cancel="$router.push('/')"
+    cancel-label="Exit Game"
+    :cancel-icon="'sym_s_exit_to_app'"
+    confirm-label="Next Round"
+    :confirm-icon="'sym_s_arrow_forward'"
+  />
 </template>
 
 <script setup>
 import "../css/tableStyles.scss";
 import { ref } from "vue";
+import BottomBar from "../components/BottomBar.vue";
+import NumberStepper from "../components/NumberStepper.vue";
 
 const abbvCols = [
   {

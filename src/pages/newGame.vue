@@ -15,23 +15,29 @@
       v-model="minPlayers"
     />
   </div>
-  <q-separator />
-  <div class="row justify-between">
-    <q-btn
-      label="Cancel"
-      icon="sym_s_cancel"
-      color="negative"
-      flat
-      @click="$router.push('/')"
-    />
-    <q-btn
-      label="Add Game To Library"
-      icon="sym_s_arrow_forward"
-      color="positive"
-      flat
-      @click="$router.push('/newInstance')"
-    />
-  </div>
+  <BottomBar
+    confirm-label="Add to Library"
+    @cancel="onCancel"
+    @confirm="onConfirm"
+  />
 </template>
 
-<script setup></script>
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import BottomBar from '../components/BottomBar.vue'
+
+// local form state
+const gameTitle = ref('')
+const minPlayers = ref('')
+
+const router = useRouter()
+function onCancel() {
+  router.push('/')
+}
+
+function onConfirm() {
+  //save new game here
+  router.push('/newInstance')
+}
+</script>
