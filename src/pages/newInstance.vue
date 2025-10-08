@@ -94,7 +94,6 @@
       <q-card-section class="q-pt-none">
         <q-input
           standout
-          color="red"
           label="Player Name"
           v-model="newPlayerName"
           autofocus
