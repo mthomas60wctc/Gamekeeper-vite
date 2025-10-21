@@ -2,13 +2,13 @@
   <div class="q-pa-md">
     <div class="text-h6">Create a New Game</div>
     <q-input
-      standout
+      square
       class="q-mt-md"
       label="Game Title"
       v-model="gameTitle"
     />
     <q-input
-      standout
+      square
       class="q-mt-md"
       style="width: 40%"
       label="Minimum Players"

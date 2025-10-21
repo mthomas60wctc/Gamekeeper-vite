@@ -2,7 +2,7 @@
   <div class="q-pa-md">
     <div class="text-h6">Individual Records</div>
     <q-select
-      standout
+      square
       v-model="selectedGame"
       :options="gameOptions"
       label="Select game(s)"

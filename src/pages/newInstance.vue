@@ -2,7 +2,7 @@
   <div class="q-pa-lg q-gutter-lg">
     <div class="row q-gutter-md items-end">
       <q-select
-        standout
+        square 
         v-model="gameSelected"
         use-input
         input-debounce="0"
@@ -93,8 +93,8 @@
 
       <q-card-section class="q-pt-none">
         <q-input
-          standout
-          color="red"
+          square
+          color="primary"
           label="Player Name"
           v-model="newPlayerName"
           autofocus
