@@ -28,7 +28,7 @@
         label="New Game"
         class="q-mb-sm"
         color="secondary"
-        @click="$router.push('/newGame')"
+        @click="$router.push({ path: '/newGame', query: { from: 'newInstance' } })"
       />
     </div>
     <div v-if="selectedPlayers.length" class="q-mt-lg">
@@ -112,12 +112,25 @@
 </template>
 
 <script setup>
-//todo: add new player button + functionality
-import { ref, computed } from "vue";
-import { useRouter } from "vue-router";
+import { ref, computed, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import BottomBar from '../components/BottomBar.vue'
 
 const router = useRouter();
+const route = useRoute();
+
+onMounted(() => {
+  const newGame = route.query.newGame;
+  if (newGame) {
+    const name = String(newGame);
+    // add to games list if missing
+    if (!games.value.includes(name)) {
+      games.value.unshift(name);
+    }
+    gameSelected.value = name;
+    router.replace({ path: route.path, query: {} }).catch(() => {});
+  }
+});
 const gameSelected = ref(null);
 const chipColors = ref([]);
 const selectedPlayers = ref([]);
@@ -236,8 +249,8 @@ function startGame() {
         path: "/ongoingGame",
         query: {
           game: String(payload.game),
-          // Send as a JSON string
-          players: JSON.stringify(payload.players),
+           // Send as a JSON string (router will URL-encode automatically).
+           players: JSON.stringify(payload.players),
         },
       })
       .catch(() => {});
