@@ -18,9 +18,7 @@
         <template v-slot:body-cell-CurrentRound="props">
           <q-td :props="props">
             <div class="row items-center justify-center no-wrap">
-              <NumberStepper
-              :min="0"
-               />
+              <NumberStepper :min="0" />
             </div>
           </q-td>
         </template>
@@ -52,9 +50,16 @@
 
 <script setup>
 import "../css/tableStyles.scss";
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useRoute } from "vue-router";
 import BottomBar from "../components/BottomBar.vue";
 import NumberStepper from "../components/NumberStepper.vue";
+
+const route = useRoute();
+const game = route.query.game;
+const players = JSON.parse(decodeURIComponent(route.query.players || "[]"));
+
+console.log("Ongoing Game:", game, players);
 
 const abbvCols = [
   {
@@ -69,7 +74,7 @@ const abbvCols = [
   {
     name: "CurrentRound",
     align: "center",
-    label: "Current Round",
+    label: "Points This Round",
     field: (row) => row.currentRound,
     sortable: false,
   },
@@ -82,104 +87,53 @@ const abbvCols = [
   },
 ];
 
-//todo: make dynamic based on number of rounds
+const rows = ref(
+  players.map((player) => ({
+    name: player,
+    scores: [],
+    currentRound: 0,
+    total: 0,
+  }))
+);
 
-const cols = [
-  {
-    name: "Name",
-    required: true,
-    label: "Name",
-    align: "left",
-    field: (row) => row.name,
-    format: (val) => `${val}`,
-    sortable: true,
-  },
-  {
-    name: "Round1",
-    align: "center",
-    label: "Round 1",
-    field: (row) => row.scores[0],
-    sortable: true,
-  },
-  {
-    name: "Round2",
-    align: "center",
-    label: "Round 2",
-    field: (row) => row.scores[1],
-    sortable: true,
-  },
-  {
-    name: "Round3",
-    align: "center",
-    label: "Round 3",
-    field: (row) => row.scores[2],
-    sortable: true,
-  },
-  {
-    name: "Round4",
-    align: "center",
-    label: "Round 4",
-    field: (row) => row.scores[3],
-    sortable: true,
-  },
-  {
-    name: "Round5",
-    align: "center",
-    label: "Round 5",
-    field: (row) => row.scores[4],
-    sortable: true,
-  },
-  {
-    name: "Round6",
-    align: "center",
-    label: "Round 6",
-    field: (row) => row.scores[5],
-    sortable: true,
-  },
-  {
-    name: "Round7",
-    align: "center",
-    label: "Round 7",
-    field: (row) => row.scores[6],
-    sortable: true,
-  },
-  {
+const tab = ref("current");
+
+const cols = computed(() => {
+  const colsArr = [
+    {
+      name: "Name",
+      required: true,
+      label: "Name",
+      align: "left",
+      field: (row) => row.name,
+      // format: (val) => `${val}`,
+      sortable: true,
+    },
+  ];
+
+  const maxRounds = Math.max(0, ...rows.value.map(r => (r.scores || []).length));
+
+  for (let i = 0; i < maxRounds; i++) {
+    colsArr.push({
+      name: `Round${i + 1}`,
+      align: "center",
+      label: `Round ${i + 1}`,
+      //make sure scores array exists and has a value at index i
+      field: (row) => (row.scores && row.scores[i] != null ? row.scores[i] : 0),
+      sortable: true,
+    });
+  }
+
+  colsArr.push({
     name: "Total",
     align: "center",
     label: "Total",
-    field: (row) => row.total,
+    field: (row) => (row.total != null ? row.total : 0),
     sortable: true,
-  },
-];
+  });
 
-//todo:load data from app state
+  console.log("Computed cols:");
 
-const rows = ref([
-  {
-    name: "Anne",
-    scores: [2, 4, 6, 8, 10, 0, 3],
-    currentRound: 0,
-    total: 33,
-  },
-  {
-    name: "Bob",
-    scores: [3, 5, 7, 9, 2, 4, 6],
-    currentRound: 0,
-    total: 36,
-  },
-  {
-    name: "Charlie",
-    scores: [10, 8, 6, 4, 2, 0, 1],
-    currentRound: 0,
-    total: 31,
-  },
-  {
-    name: "Diana",
-    scores: [2, 3, 5, 7, 9, 10, 8],
-    currentRound: 0,
-    total: 44,
-  },
-]);
-
-const tab = ref("current");
+  return colsArr;
+});
 </script>

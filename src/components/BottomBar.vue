@@ -8,7 +8,7 @@
         :color="cancelColor"
         flat
         @click="onCancel"
-        :disable="cancelDisable"
+        :disable="!!cancelDisable"
       />
       <q-btn
         :label="confirmLabel"
@@ -16,7 +16,7 @@
         :color="confirmColor"
         flat
         @click="onConfirm"
-        :disable="confirmDisable"
+        :disable="!!confirmDisable"
       />
     </div>
   </div>

@@ -83,7 +83,7 @@
     :cancel-icon="'sym_s_refresh'"
     confirm-label="Start Game"
     :confirm-icon="'sym_s_play_arrow'"
-    :confirm-disabled="!gameSelected || selectedPlayers.length === 0"
+    :confirm-disable="!validConfiguration()"
   />
   <q-dialog v-model="newPlayerDialog" backdrop-filter="blur(4px)">
     <q-card style="min-width: 350px">
@@ -219,9 +219,27 @@ function resetForm() {
   newGameName.value = "";
 }
 
+function validConfiguration() {
+  return gameSelected.value !== null && selectedPlayers.value.length > 1;
+}
+
 function startGame() {
-  if (gameSelected.value && selectedPlayers.value.length > 0) {
-    router.push({ path: "/ongoingGame" }).catch(() => {});
+  if (validConfiguration()) {
+    // pass the selected game and players to the ongoingGame page via the query string
+    // players are JSON-encoded to preserve the array structure
+    const payload = {
+      game: gameSelected.value,
+      players: selectedPlayers.value,
+    };
+    router
+      .push({
+        path: "/ongoingGame",
+        query: {
+          game: String(payload.game),
+          players: encodeURIComponent(JSON.stringify(payload.players)),
+        },
+      })
+      .catch(() => {});
   }
 }
 
