@@ -18,7 +18,10 @@
         <template v-slot:body-cell-CurrentRound="props">
           <q-td :props="props">
             <div class="row items-center justify-center no-wrap">
-              <NumberStepper :min="0" />
+              <NumberStepper
+                :min="0"
+                v-model:modelValue="props.row.currentRound"
+              />
             </div>
           </q-td>
         </template>
@@ -40,26 +43,26 @@
   </q-tab-panels>
 
   <BottomBar
-    @cancel="$router.push('/')"
+    @cancel="endGame()"
     cancel-label="Exit Game"
     :cancel-icon="'sym_s_exit_to_app'"
     confirm-label="Next Round"
     :confirm-icon="'sym_s_arrow_forward'"
+    @confirm="finishRound()"
   />
 </template>
 
 <script setup>
 import "../css/tableStyles.scss";
 import { ref, computed } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import BottomBar from "../components/BottomBar.vue";
 import NumberStepper from "../components/NumberStepper.vue";
 
 const route = useRoute();
+const router = useRouter();
 const game = route.query.game;
 const players = JSON.parse(decodeURIComponent(route.query.players || "[]"));
-
-console.log("Ongoing Game:", game, players);
 
 const abbvCols = [
   {
@@ -98,6 +101,43 @@ const rows = ref(
 
 const tab = ref("current");
 
+function finishRound() {
+  rows.value.forEach((row) => {
+    const score = Number(row.currentRound);
+    if (!Array.isArray(row.scores)) row.scores = [];
+    row.scores.push(score);
+    // recompute total from scores to keep it consistent
+    row.total = row.scores.reduce((acc, v) => acc + (Number(v) || 0), 0);
+    row.currentRound = 0;
+  });
+}
+
+function endGame() {
+  // find player with the highest total
+  let topScore = rows.value[0].total;
+  let winner = rows.value[0].name;
+  rows.value.forEach((r) => {
+    if (r.total > topScore) {
+      topScore = r.total;
+      winner = r.name;
+    }
+  });
+
+  const payload = {
+    game: game,
+    winner: winner,
+  };
+  router.push({
+      path: "/recordsView",
+      query: {
+        game: String(payload.game),
+        winner: String(payload.winner),
+        players: encodeURIComponent(JSON.stringify(players)),
+      },
+    }
+  ).catch(() => {});
+}
+
 const cols = computed(() => {
   const colsArr = [
     {
@@ -106,12 +146,14 @@ const cols = computed(() => {
       label: "Name",
       align: "left",
       field: (row) => row.name,
-      // format: (val) => `${val}`,
       sortable: true,
     },
   ];
 
-  const maxRounds = Math.max(0, ...rows.value.map(r => (r.scores || []).length));
+  const maxRounds = Math.max(
+    0,
+    ...rows.value.map((r) => (r.scores || []).length)
+  );
 
   for (let i = 0; i < maxRounds; i++) {
     colsArr.push({

@@ -236,7 +236,8 @@ function startGame() {
         path: "/ongoingGame",
         query: {
           game: String(payload.game),
-          players: encodeURIComponent(JSON.stringify(payload.players)),
+          // Send as a JSON string
+          players: JSON.stringify(payload.players),
         },
       })
       .catch(() => {});
