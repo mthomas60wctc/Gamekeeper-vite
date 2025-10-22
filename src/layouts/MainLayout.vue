@@ -27,6 +27,7 @@
           clickable
           v-ripple
           :active-class="$q.dark.isActive ? 'bg-secondary text-white' : 'bg-secondary text-black'"
+          @click="leftDrawerOpen && toggleLeftDrawer()"
         >
           <q-item-section avatar>
             <q-icon :name="item.icon" />
@@ -68,14 +69,19 @@ const $q = useQuasar();
 
 const leftDrawerOpen = ref(false);
 
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
+function rotateHeaderBtn() {
   const headerBtn = document.querySelector('.q-header .q-btn');
   if (headerBtn instanceof HTMLElement) {
     headerBtn.style.transition = 'transform 200ms ease';
     headerBtn.style.transform = leftDrawerOpen.value ? 'rotate(-90deg)' : 'rotate(0deg)';
   }
 }
+
+function toggleLeftDrawer() {
+  leftDrawerOpen.value = !leftDrawerOpen.value;
+  rotateHeaderBtn();
+}
+
 const menuItems = [
   {
     to: "/newInstance",
