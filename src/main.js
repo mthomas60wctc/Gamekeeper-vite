@@ -3,7 +3,6 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import { Quasar, Dark, Meta } from "quasar";
 
 // Import icon libraries
-import "@quasar/extras/roboto-font/roboto-font.css";
 import "@quasar/extras/material-symbols-sharp/material-symbols-sharp.css";
 import iconSet from "quasar/icon-set/material-symbols-sharp.js";
 

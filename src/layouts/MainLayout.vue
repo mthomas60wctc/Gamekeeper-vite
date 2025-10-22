@@ -1,10 +1,10 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-header elevated class="text-white">
+    <q-header elevated :class="$q.dark.isActive ? 'text-white' : 'text-black'">
       <q-toolbar>
         <q-btn dense flat round icon="sym_s_menu" @click="toggleLeftDrawer" />
         <q-toolbar-title>
-          <router-link to="/" class="text-white" style="text-decoration: none">
+          <router-link to="/" :class="$q.dark.isActive ? 'text-white' : 'text-black'" style="text-decoration: none">
             GameKeeper
           </router-link>
         </q-toolbar-title>
@@ -18,7 +18,7 @@
       bordered
       class="dark"
     >
-      <q-list>
+      <q-list :class="$q.dark.isActive ? 'text-white' : 'text-black'">
         <q-item-label header overline>MENU</q-item-label>
         <q-item
           v-for="item in menuItems"
@@ -26,7 +26,7 @@
           :to="item.to"
           clickable
           v-ripple
-          active-class="bg-secondary text-white"
+          :active-class="$q.dark.isActive ? 'bg-secondary text-white' : 'bg-secondary text-black'"
         >
           <q-item-section avatar>
             <q-icon :name="item.icon" />
@@ -70,6 +70,11 @@ const leftDrawerOpen = ref(false);
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
+  const headerBtn = document.querySelector('.q-header .q-btn');
+  if (headerBtn instanceof HTMLElement) {
+    headerBtn.style.transition = 'transform 200ms ease';
+    headerBtn.style.transform = leftDrawerOpen.value ? 'rotate(-90deg)' : 'rotate(0deg)';
+  }
 }
 const menuItems = [
   {
