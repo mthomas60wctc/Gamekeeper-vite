@@ -28,7 +28,6 @@
       </q-table>
     </q-tab-panel>
     <q-tab-panel name="history">
-      <q-btn label="Edit" @click="editing = !editing"/>
       <q-table
         class="my-sticky-table"
         :rows="rows"
@@ -39,19 +38,16 @@
         :pagination="{ rowsPerPage: 0 }"
         hide-pagination
       >
-        <template v-slot:body-cell="props">
-          <q-td :props="props">
-            <div class="row items-center no-wrap">
-              {{ props.value }}
-              <q-icon v-if="editing && props.col.name !== 'Name' && props.col.name !== 'Total'" name="sym_s_edit" />
-              </div>  
-          </q-td>
-        </template>
         <template v-slot:header-cell="props">
           <q-th :props="props">
             <div class="row items-center justify-center no-wrap">
               {{ props.col.label }}
-              <q-icon v-if="editing && props.col.name !== 'Name' && props.col.name !== 'Total'" name="sym_s_delete" />
+              <q-icon
+                v-if="props.col.name !== 'Name' && props.col.name !== 'Total'"
+                name="sym_s_edit"
+                @click="editRound(props.row, props.col)"
+                mouse="pointer"
+              />
             </div>
           </q-th>
         </template>
@@ -67,6 +63,38 @@
     :confirm-icon="'sym_s_arrow_forward'"
     @confirm="finishRound()"
   />
+  <q-dialog v-model="editDialog.show" persistent>
+    <q-card style="min-width: 300px">
+      <q-card-section>
+        <div class="row items-center no-wrap" style="width: 100%">
+          <div class="text-h6">Edit {{ editDialog.col.label }}</div>
+          <q-btn
+            v-if="editDialog.roundIndex !== null"
+            flat
+            dense
+            round
+            color="negative"
+            icon="sym_s_delete"
+            @click="deleteRound(editDialog.roundIndex)"
+          />
+        </div>
+      </q-card-section>
+      <q-card-section>
+        <div v-for="row in rows" :key="row.name" class="q-mb-md">
+          {{ row.name }} score
+          <q-input v-model.number="editDialog.values[row.name]" type="number" />
+        </div>
+      </q-card-section>
+      <BottomBar
+        @cancel="editDialog.show = false"
+        cancel-label="Cancel"
+        :cancel-icon="'sym_s_close'"
+        confirm-label="Save"
+        :confirm-icon="'sym_s_check'"
+        @confirm="saveEdit()"
+      />
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup>
@@ -116,9 +144,66 @@ const rows = ref(
   }))
 );
 
-const editing = ref(false);
-
 const tab = ref("current");
+
+const editDialog = ref({
+  show: false,
+  row: null,
+  col: null,
+  roundIndex: null,
+  values: {},
+});
+
+function editRound(row, col) {
+  const match = String(col.name).match(/^Round(\d+)$/);
+  const roundIndex = match ? Number(match[1]) - 1 : null;
+
+  const values = {};
+  rows.value.forEach((r) => {
+    values[r.name] =
+      r.scores && roundIndex !== null && r.scores[roundIndex] != null
+        ? r.scores[roundIndex]
+        : null;
+  });
+
+  editDialog.value = { show: true, row, col, roundIndex, values };
+}
+
+function saveEdit() {
+  const idx = editDialog.value.roundIndex;
+  if (idx == null) {
+    editDialog.value.show = false;
+    return;
+  }
+
+  rows.value.forEach((r) => {
+    if (!Array.isArray(r.scores)) r.scores = [];
+    const v = editDialog.value.values[r.name];
+    // if user provided a value (including 0), write it; if null leave unchanged
+    if (v != null) {
+      r.scores[idx] = Number(v) || 0;
+    }
+    // recompute total from scores to keep it consistent
+    r.total = (r.scores || []).reduce(
+      (acc, val) => acc + (Number(val) || 0),
+      0
+    );
+  });
+
+  editDialog.value.show = false;
+}
+
+function deleteRound(idx) {
+  if (idx == null) return;
+  rows.value.forEach((r) => {
+    if (Array.isArray(r.scores)) {
+      r.scores.splice(idx, 1);
+      r.total = (r.scores || []).reduce((acc, v) => acc + (Number(v) || 0), 0);
+    }
+  });
+  // close dialog after deletion
+  editDialog.value.show = false;
+}
 
 function finishRound() {
   rows.value.forEach((row) => {
@@ -146,15 +231,16 @@ function endGame() {
     game: game,
     winner: winner,
   };
-  router.push({
+  router
+    .push({
       path: "/recordsView",
       query: {
         game: String(payload.game),
         winner: String(payload.winner),
         players: encodeURIComponent(JSON.stringify(players)),
       },
-    }
-  ).catch(() => {});
+    })
+    .catch(() => {});
 }
 
 const cols = computed(() => {
@@ -192,8 +278,6 @@ const cols = computed(() => {
     field: (row) => (row.total != null ? row.total : 0),
     sortable: true,
   });
-
-  console.log("Computed cols:");
 
   return colsArr;
 });
