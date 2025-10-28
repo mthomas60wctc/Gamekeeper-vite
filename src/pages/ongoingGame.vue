@@ -28,6 +28,7 @@
       </q-table>
     </q-tab-panel>
     <q-tab-panel name="history">
+      <q-btn label="Edit" @click="editing = !editing"/>
       <q-table
         class="my-sticky-table"
         :rows="rows"
@@ -38,6 +39,22 @@
         :pagination="{ rowsPerPage: 0 }"
         hide-pagination
       >
+        <template v-slot:body-cell="props">
+          <q-td :props="props">
+            <div class="row items-center no-wrap">
+              {{ props.value }}
+              <q-icon v-if="editing && props.col.name !== 'Name' && props.col.name !== 'Total'" name="sym_s_edit" />
+              </div>  
+          </q-td>
+        </template>
+        <template v-slot:header-cell="props">
+          <q-th :props="props">
+            <div class="row items-center justify-center no-wrap">
+              {{ props.col.label }}
+              <q-icon v-if="editing && props.col.name !== 'Name' && props.col.name !== 'Total'" name="sym_s_delete" />
+            </div>
+          </q-th>
+        </template>
       </q-table>
     </q-tab-panel>
   </q-tab-panels>
@@ -98,6 +115,8 @@ const rows = ref(
     total: 0,
   }))
 );
+
+const editing = ref(false);
 
 const tab = ref("current");
 
