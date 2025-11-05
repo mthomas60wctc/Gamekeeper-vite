@@ -100,6 +100,7 @@
 <script setup>
 import "../css/tableStyles.scss";
 import { ref, computed } from "vue";
+import { createPlayerRecord } from "../js/dataStructures";
 import { useRoute, useRouter } from "vue-router";
 import BottomBar from "../components/BottomBar.vue";
 import NumberStepper from "../components/NumberStepper.vue";
@@ -135,14 +136,7 @@ const abbvCols = [
   },
 ];
 
-const rows = ref(
-  players.map((player) => ({
-    name: player,
-    scores: [],
-    currentRound: 0,
-    total: 0,
-  }))
-);
+const rows = ref(players.map((player) => createPlayerRecord(player)));
 
 const tab = ref("current");
 

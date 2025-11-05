@@ -115,6 +115,7 @@
 import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import BottomBar from '../components/BottomBar.vue'
+import { GamesList, PlayersList } from "../js/dataStructures";
 
 const router = useRouter();
 const route = useRoute();
@@ -144,41 +145,11 @@ const availablePlayers = computed(() => {
   );
 });
 
-const playersFull = [
-  "Alice",
-  "Bob",
-  "Charlie",
-  "Diana",
-  "Eve",
-  "Frank",
-  "Grace",
-  "Hannah",
-  "Ivan",
-  "Judy",
-];
+// Initialize from PlayersList exported by dataStructures.js
+const playersFull = [...PlayersList.map(p => p.name)];
 
-const gamesFull = [
-  "Chess",
-  "Monopoly",
-  "Poker",
-  "Scrabble",
-  "Uno",
-  "Settlers of Catan",
-  "Risk",
-  "Clue",
-  "Codenames",
-  "Carcassonne",
-  "Ticket to Ride",
-  "Go Fish",
-  "Spades",
-  "Hearts",
-  "Bridge",
-  "Dominoes",
-  "Checkers",
-  "Pandemic",
-  "Exploding Kittens",
-  "Sequence",
-];
+// Initialize from GamesList exported by dataStructures.js
+const gamesFull = [...GamesList.map(g => g.name)];
 
 const games = ref([...gamesFull]);
 

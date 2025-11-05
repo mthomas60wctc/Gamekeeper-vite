@@ -34,6 +34,7 @@ import { ref, computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import "../css/tableStyles.scss";
 import { addAndGetPlayer, addPlays, addWins } from "../js/helpers";
+import { PlayersList, GamesList } from "../js/dataStructures";
 const route = useRoute();
 const router = useRouter();
 
@@ -84,58 +85,13 @@ const dynamicColumns = computed(() => {
   return columns;
 });
 
-const records = [
-  {
-    name: "Alice",
-    wins: {},
-    plays: {},
-  },
-  {
-    name: "Bob",
-    wins: {},
-    plays: {},
-  },
-  {
-    name: "Charlie",
-    wins: {},
-    plays: {},
-  },
-  {
-    name: "Diana",
-    wins: {},
-    plays: {},
-  },
-  {
-    name: "Eve",
-    wins: {},
-    plays: {},
-  },
-  {
-    name: "Frank",
-    wins: {},
-    plays: {},
-  },
-  {
-    name: "Grace",
-    wins: {},
-    plays: {},
-  },
-  {
-    name: "Hannah",
-    wins: {},
-    plays: {},
-  },
-  {
-    name: "Ivan",
-    wins: {},
-    plays: {},
-  },
-  {
-    name: "Judy",
-    wins: {},
-    plays: {},
-  },
-];
+// Initialize records from PlayersList exported by dataStructures. Make shallow copies
+// so the UI works with plain objects and helpers can modify them safely.
+let records = PlayersList.map((p) => ({
+  name: p.name,
+  wins: { ...(p.wins || {}) },
+  plays: { ...(p.plays || {}) },
+}));
 
 // (Filtering of records by query players is handled during onMounted so route
 // query values can be normalized first.)
@@ -184,9 +140,10 @@ onMounted(() => {
     addWins(records, String(qWinner), String(qGame));
   }
 
-  gameOptions = Array.from(
-    new Set(records.flatMap((r) => Object.keys(r.plays)))
-  );
+  // Use GamesList names as options when available, otherwise fall back to discovered games
+  gameOptions = GamesList && GamesList.length > 0
+    ? GamesList.map(g => g.name)
+    : Array.from(new Set(records.flatMap((r) => Object.keys(r.plays))));
 
   // clear the query so reload doesn't re-apply
   router.replace({ path: route.path, query: {} }).catch(() => {});
